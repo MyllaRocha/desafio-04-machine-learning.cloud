@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import joblib
 import pandas as pd
+import sklearn
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
@@ -21,7 +22,13 @@ LABELS = ["Beneficial", "Neutral", "Negative"]
 
 
 def main():
+    if not CSV.exists():
+        raise FileNotFoundError(f"CSV não encontrado em {CSV}. Coloque a base em data/Social_media_impact_on_life.csv.")
     df = pd.read_csv(CSV)
+    required = {TARGET, "Student_ID"}
+    missing = required.difference(df.columns)
+    if missing:
+        raise ValueError(f"Colunas obrigatórias ausentes: {sorted(missing)}")
     if TARGET not in df or df[TARGET].isna().any():
         raise ValueError("A coluna-alvo está ausente ou contém valores nulos.")
     X = df.drop(columns=[TARGET, "Student_ID"], errors="ignore")
@@ -50,7 +57,7 @@ def main():
     OUT.mkdir(exist_ok=True)
     joblib.dump(model, OUT / "model.joblib")
     (OUT / "metrics.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2), encoding="utf-8")
-    manifest = {"model_name": "social-media-overall-impact", "model_version": "1.0.0", "target": TARGET, "features": X.columns.tolist(), "metrics_file": "metrics.json"}
+    manifest = {"model_name": "social-media-overall-impact", "model_version": "1.0.0", "target": TARGET, "features": X.columns.tolist(), "metrics_file": "metrics.json", "scikit_learn_version": sklearn.__version__, "joblib_version": joblib.__version__}
     (OUT / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({k: metrics[k] for k in ["accuracy", "precision_macro", "recall_macro", "f1_macro", "best_cv_f1_macro", "best_params"]}, ensure_ascii=False, indent=2))
     print("Artefatos salvos em:", OUT)

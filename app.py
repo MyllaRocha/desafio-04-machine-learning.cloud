@@ -92,6 +92,11 @@ if submitted:
     start = time.perf_counter()
     try:
         model, model_source = load_model()
+        expected = list(getattr(model, "feature_names_in_", row.columns))
+        missing = [column for column in expected if column not in row.columns]
+        if missing:
+            raise ValueError(f"Campos ausentes para o modelo: {missing}")
+        row = row.reindex(columns=expected)
         prediction = str(model.predict(row)[0])
         probability = None
         if hasattr(model, "predict_proba"):

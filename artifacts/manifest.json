@@ -18,5 +18,7 @@
     "Mental_Health_Index",
     "Academic_Performance_GPA"
   ],
-  "metrics_file": "metrics.json"
+  "metrics_file": "metrics.json",
+  "scikit_learn_version": "1.8.0",
+  "joblib_version": "1.5.3"
 }

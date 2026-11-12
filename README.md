@@ -41,7 +41,7 @@ python src/train.py
 streamlit run app.py
 ```
 
-O treinamento gera `artifacts/model.joblib`, `artifacts/metrics.json` e `artifacts/manifest.json`. O arquivo do modelo está no `.gitignore` para evitar versionar binários; envie-o ao repositório de modelo no Hugging Face Hub.
+O treinamento gera `artifacts/model.joblib`, `artifacts/metrics.json` e `artifacts/manifest.json`. O arquivo do modelo está no `.gitignore` para evitar versionar binários no GitHub; envie-o separadamente ao repositório de modelo no Hugging Face Hub. O `requirements.txt` fixa versões compatíveis com o artefato gerado neste pacote; mantenha a versão do scikit-learn igual à usada no treinamento para evitar incompatibilidade de serialização.
 
 ## Publicação do modelo no Hugging Face Hub
 
@@ -93,3 +93,18 @@ Uma execução independente anterior, com divisão estratificada 80/20 e `random
 - Hugging Face Hub: https://huggingface.co/docs/hub/index
 - Streamlit Community Cloud: https://docs.streamlit.io/deploy/streamlit-community-cloud
 - GitHub Docs: https://docs.github.com/
+
+
+## Correções aplicadas nesta revisão
+- O notebook agora aceita o CSV diretamente (não tenta abrir CSV como ZIP).
+- A instalação padrão do Colab não instala `boto3`/`sagemaker`; as etapas AWS permanecem opcionais.
+- O script de treinamento verifica a existência do CSV e das colunas obrigatórias.
+- A aplicação alinha as colunas de entrada à ordem esperada pelo pipeline.
+- O modelo foi treinado novamente a partir do CSV incluído e o artefato foi gerado e testado nesta revisão.
+
+### Teste rápido do artefato
+
+```bash
+pip install pytest
+pytest -q
+```
