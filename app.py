@@ -36,18 +36,31 @@ st.warning(
 
 @st.cache_resource
 def load_model():
-    repo_id = get_setting("HF_MODEL_REPO_ID").strip()
+    repo_id = get_setting(
+        "HF_MODEL_REPO_ID",
+        "myllac/desafio04-impacto-redes-sociais"
+    ).strip()
+
     if repo_id:
         if hf_hub_download is None:
             raise RuntimeError("Instale huggingface_hub conforme requirements.txt.")
+
         token = get_setting("HF_TOKEN") or None
-        path = hf_hub_download(repo_id=repo_id, filename="model.joblib", repo_type="model", token=token)
+
+        path = hf_hub_download(
+            repo_id=repo_id,
+            filename="model.joblib",
+            repo_type="model",
+            token=token
+        )
+
         return joblib.load(path), f"Hugging Face Hub: {repo_id}"
+
     if LOCAL_MODEL.exists():
         return joblib.load(LOCAL_MODEL), "arquivo local"
+
     raise FileNotFoundError(
-        "Modelo não encontrado. Treine com `python src/train.py` ou configure "
-        "HF_MODEL_REPO_ID nos Secrets do Streamlit apontando para o repositório do modelo."
+        "Modelo não encontrado. Verifique a configuração HF_MODEL_REPO_ID."
     )
 
 with st.expander("Sobre o projeto"):
