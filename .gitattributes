@@ -1,0 +1,3 @@
+*.ipynb linguist-detectable=true
+*.csv text
+*.md text

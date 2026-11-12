@@ -1,0 +1,22 @@
+{
+  "model_name": "social-media-overall-impact",
+  "model_version": "1.0.0",
+  "target": "Overall_Impact",
+  "features": [
+    "Age",
+    "Gender",
+    "Academic_Level",
+    "Primary_Platform",
+    "Daily_Usage_Hours",
+    "Weekend_Extra_Hours",
+    "Device_Type",
+    "Sleep_Duration_Hours",
+    "Sleep_Quality_Score",
+    "Late_Night_Usage",
+    "Social_Comparison_Frequency",
+    "Perceived_Stress_Score",
+    "Mental_Health_Index",
+    "Academic_Performance_GPA"
+  ],
+  "metrics_file": "metrics.json"
+}
